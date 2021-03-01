@@ -3,6 +3,8 @@ package server
 import (
 	"context"
 	"github.com/go-playground/validator/v10"
+	"github.com/huyhvq/betting/pkg/handler"
+	"github.com/huyhvq/betting/pkg/repository"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"net/http"
@@ -49,12 +51,13 @@ func (s *svr) Start() {
 	}
 }
 
-func NewServer() Server {
+func NewServer(wr repository.WagerRepository) Server {
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	e.POST("/wagers", createWager)
+
+	h := handler.NewHandler(wr)
+	e.POST("/wagers", h.CreateWager)
 	return &svr{server: e}
 }
-

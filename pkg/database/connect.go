@@ -1,34 +1,32 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 type Connector interface {
-	Open() (*sql.DB, error)
+	Open() (*gorm.DB, error)
 	Close() error
 }
 
 type db struct {
-	DB *sql.DB
+	DB *gorm.DB
 }
 
-func (d *db) Open() (*sql.DB, error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?multiStatements=true",
+func (d *db) Open() (*gorm.DB, error) {
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		viper.Get("db_user"),
 		viper.Get("db_pass"),
 		viper.Get("db_host"),
 		viper.Get("db_port"),
 		viper.Get("db_name"),
 	)
-	db, err := sql.Open("mysql", dsn)
+
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		return nil, err
-	}
-	if err := db.Ping(); err != nil {
 		return nil, err
 	}
 	d.DB = db
@@ -36,7 +34,11 @@ func (d *db) Open() (*sql.DB, error) {
 }
 
 func (d *db) Close() error {
-	return d.DB.Close()
+	sqlDB, err := d.DB.DB()
+	if err != nil {
+		return err
+	}
+	return sqlDB.Close()
 }
 
 func NewDB() Connector {

@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/huyhvq/betting/pkg/database"
+	"github.com/huyhvq/betting/pkg/repository"
 	"github.com/huyhvq/betting/pkg/server"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -14,10 +16,7 @@ var rootCmd = &cobra.Command{
 	Use:   "betting",
 	Short: "Betting API",
 	Long:  `Betting API`,
-	Run: func(cmd *cobra.Command, args []string) {
-		srv := server.NewServer()
-		srv.Start()
-	},
+	Run:   serve,
 }
 
 func Execute() {
@@ -44,4 +43,17 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 	}
+}
+
+func serve(cmd *cobra.Command, args []string) {
+	db := database.NewDB()
+	conn, err := db.Open()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	wr := repository.NewWager(conn)
+	srv := server.NewServer(wr)
+	srv.Start()
 }

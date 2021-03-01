@@ -22,11 +22,16 @@ func init() {
 
 func migrateExecute(cmd *cobra.Command, args []string) {
 	db := database.NewDB()
+	defer db.Close()
 	conn, err := db.Open()
 	if err != nil {
 		panic(err)
 	}
-	driver, _ := mysql.WithInstance(conn, &mysql.Config{})
+	sqlDB, err := conn.DB()
+	if err != nil {
+		panic(err)
+	}
+	driver, _ := mysql.WithInstance(sqlDB, &mysql.Config{})
 	m, err := migrate.NewWithDatabaseInstance(
 		"file://migrations",
 		"mysql",
