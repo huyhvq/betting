@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/huyhvq/betting/pkg/server"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"os"
@@ -13,7 +14,10 @@ var rootCmd = &cobra.Command{
 	Use:   "betting",
 	Short: "Betting API",
 	Long:  `Betting API`,
-	Run:   func(cmd *cobra.Command, args []string) {},
+	Run: func(cmd *cobra.Command, args []string) {
+		srv := server.NewServer()
+		srv.Start()
+	},
 }
 
 func Execute() {
