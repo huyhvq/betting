@@ -7,6 +7,7 @@ import (
 	"github.com/huyhvq/betting/pkg/repository"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"math"
 	"net/http"
 	"os"
 	"os/signal"
@@ -53,11 +54,21 @@ func (s *svr) Start() {
 
 func NewServer(wr repository.WagerRepository) Server {
 	e := echo.New()
-	e.Validator = &CustomValidator{validator: validator.New()}
+	validate := validator.New()
+	validate.RegisterValidation("two-decimal-places", ValidateTwoDecimalPlaces)
+
+	e.Validator = &CustomValidator{validator: validate}
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
 	h := handler.NewHandler(wr)
 	e.POST("/wagers", h.CreateWager)
 	return &svr{server: e}
+}
+
+func ValidateTwoDecimalPlaces(fl validator.FieldLevel) bool {
+	value := fl.Field().Float()
+	valuef := value * float64(math.Pow(10.0, float64(2)))
+	extra := valuef - float64(int(valuef))
+	return extra == 0
 }

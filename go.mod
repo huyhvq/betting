@@ -1,11 +1,10 @@
 module github.com/huyhvq/betting
 
-go 1.15
+go 1.16
 
 require (
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
-	github.com/go-playground/validator/v10 v10.4.1 // indirect
-	github.com/go-sql-driver/mysql v1.5.0
+	github.com/go-playground/validator/v10 v10.4.1
 	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/labstack/echo/v4 v4.2.0
@@ -20,6 +19,6 @@ require (
 	golang.org/x/sys v0.0.0-20210301091718-77cc2087c03b // indirect
 	golang.org/x/text v0.3.5 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
-	gorm.io/driver/mysql v1.0.4 // indirect
-	gorm.io/gorm v1.20.12 // indirect
+	gorm.io/driver/mysql v1.0.4
+	gorm.io/gorm v1.20.12
 )
