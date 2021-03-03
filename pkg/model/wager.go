@@ -1,9 +1,11 @@
 package model
 
-import "time"
+import (
+	"gorm.io/gorm"
+)
 
 type Wager struct {
-	ID                  int64
+	gorm.Model
 	TotalWagerValue     int64
 	Odds                int64
 	SellingPercentage   int64
@@ -11,5 +13,4 @@ type Wager struct {
 	CurrentSellingPrice float64
 	PercentageSold      int64
 	AmountSold          float64
-	PlacedAt            time.Time
 }

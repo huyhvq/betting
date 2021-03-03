@@ -39,9 +39,13 @@ func initConfig() {
 		viper.SetConfigName("betting")
 	}
 	viper.AutomaticEnv()
-
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+	}
+
+	viper.SetEnvPrefix("bet")
+	for _, cfgName := range viper.AllKeys() {
+		viper.BindEnv(cfgName)
 	}
 }
 

@@ -18,7 +18,7 @@ type (
 	}
 
 	CreateWagerResponse struct {
-		ID                  int64     `json:"id"`
+		ID                  uint      `json:"id"`
 		TotalWagerValue     int64     `json:"total_wager_value"`
 		Odds                int64     `json:"odds"`
 		SellingPercentage   int64     `json:"selling_percentage"`
@@ -49,25 +49,26 @@ func (h *handler) CreateWager(c echo.Context) error {
 	}
 
 	wm := model.Wager{
-		TotalWagerValue:   u.TotalWagerValue,
-		Odds:              u.Odds,
-		SellingPercentage: u.SellingPercentage,
-		SellingPrice:      u.SellingPrice,
+		TotalWagerValue:     u.TotalWagerValue,
+		Odds:                u.Odds,
+		SellingPercentage:   u.SellingPercentage,
+		SellingPrice:        u.SellingPrice,
+		CurrentSellingPrice: u.SellingPrice,
 	}
-	wm, err := h.wr.Create(wm)
+	w, err := h.wr.Create(wm)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	resp := CreateWagerResponse{
-		ID:                  wm.ID,
-		TotalWagerValue:     wm.TotalWagerValue,
-		Odds:                wm.Odds,
-		SellingPercentage:   wm.SellingPercentage,
-		SellingPrice:        wm.SellingPrice,
-		CurrentSellingPrice: wm.CurrentSellingPrice,
-		PercentageSold:      wm.PercentageSold,
-		AmountSold:          wm.AmountSold,
-		PlacedAt:            wm.PlacedAt,
+		ID:                  w.ID,
+		TotalWagerValue:     w.TotalWagerValue,
+		Odds:                w.Odds,
+		SellingPercentage:   w.SellingPercentage,
+		SellingPrice:        w.SellingPrice,
+		CurrentSellingPrice: w.CurrentSellingPrice,
+		PercentageSold:      w.PercentageSold,
+		AmountSold:          w.AmountSold,
+		PlacedAt:            w.CreatedAt,
 	}
 	return c.JSON(http.StatusOK, resp)
 }

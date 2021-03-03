@@ -24,7 +24,6 @@ func (d *db) Open() (*gorm.DB, error) {
 		viper.Get("db_port"),
 		viper.Get("db_name"),
 	)
-
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err

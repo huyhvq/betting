@@ -1,0 +1,28 @@
+version: '3.3'
+
+services:
+  db:
+    image: mysql:8.0
+    volumes:
+      - db_volume:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: betting
+      MYSQL_USER: betting
+      MYSQL_PASSWORD: betting
+  api:
+    depends_on:
+      - db:
+    image: huyhvq/betting:latest
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      BET_DB_HOST: db
+      BET_DB_PORT: 3306
+      BET_DB_NAME: betting
+      BET_DB_USER: betting
+      BET_DB_PASS: betting
+volumes:
+  db_volume: { }

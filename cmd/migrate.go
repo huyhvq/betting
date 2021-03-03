@@ -42,7 +42,6 @@ func migrateExecute(cmd *cobra.Command, args []string) {
 	}
 
 	if len(args) > 0 && args[0] == "down" {
-		fmt.Println("down")
 		if err := m.Down(); err != nil {
 			fmt.Println(err)
 		}

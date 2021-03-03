@@ -7,6 +7,8 @@ import (
 
 type Handler interface {
 	CreateWager(c echo.Context) error
+	BuyWager(c echo.Context) error
+	ListWager(c echo.Context) error
 }
 
 type handler struct {

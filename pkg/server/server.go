@@ -37,8 +37,8 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 
 func (s *svr) Start() {
 	go func() {
-		if err := s.server.Start(":1323"); err != nil && err != http.ErrServerClosed {
-			s.server.Logger.Fatal("shutting down the server")
+		if err := s.server.Start(":8080"); err != nil && err != http.ErrServerClosed {
+			s.server.Logger.Fatal("shutting down the server, ", err.Error())
 		}
 	}()
 
@@ -63,6 +63,8 @@ func NewServer(wr repository.WagerRepository) Server {
 
 	h := handler.NewHandler(wr)
 	e.POST("/wagers", h.CreateWager)
+	e.POST("/buy/:id", h.BuyWager)
+	e.GET("/wagers", h.ListWager)
 	return &svr{server: e}
 }
 
