@@ -13,8 +13,8 @@ services:
       MYSQL_PASSWORD: betting
   api:
     depends_on:
-      - db:
-    image: huyhvq/betting:latest
+      - db
+    build: .
     ports:
       - "8080:8080"
     restart: always
